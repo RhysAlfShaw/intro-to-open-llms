@@ -1,0 +1,20 @@
+name: llm-example-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - ipykernel
+  - jupyter
+  - transformers
+  - pip
+  - pip:
+    - torch
+    - torchvision
+    - torchaudio
+    - accelerate
+    - transformers
+    - pandas
+    - datasets
+    - matplotlib
+    - setproctitle

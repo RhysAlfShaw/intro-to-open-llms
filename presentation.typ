@@ -45,7 +45,79 @@
   
 ]
 
+#slide(title: "How do they get trained.")[
+  There are two main parts of training:
 
+  #framed(title: "What word comes next" ,
+    [
+      - What word comes next. (learns meaning of words and connections between meaning.)
+      - everything is put in and it is evalued on what token comes next.
+    ]
+  )
+
+  #framed(title:"Fine-tuning",
+    [
+      - Fine tuning (training it to respond like a chat bot)
+      - LLM is provided a series of prompts and responces and generates conversations to behave like a ChatBot.
+    ]
+  )
+]
+
+#slide(title: "The training problem of LLMs")[
+  - Models have many billions of parameters and the entire internet equates to about 15 trillion tokens in total. 
+  
+  - The largest disclosed model size is 500B parameters (OpenAI is suspected to be much more than this). This means for each parameter there is only 30 tokens to train on. 
+
+  - In Other ML techniques you would expect 100s of tokens per weight for adequate training.
+  
+  - Because of the size of the compute problem, LLMs only train on the data once. Which means models are likely to be seriously undertranined.
+
+]
+
+
+#slide(title: "Why would you want to learn about LLMs?")[ 
+  - Build purpose driven AI agents.
+  - Use tools like ChatGPT without big tech seeing what you prompt.
+  - Because whether you like it or not its the "trend" in the AI industry.
+]
+
+
+#slide(title: "Open Source Language Models")[
+  - Models with open arhitecture and Available weights youcan download.
+  - these are made avalible though sites like huggingface.
+  - Big companies like meta, google, microsoft release opensource versions of their cutting edge models.
+  - These range in size from millions to 0.1 Trillion parameters in size.
+
+]
+
+#slide(title: "What does the Model Actually see.")[
+  A standard prompt to an LLM might look something like:
+
+  #framed(
+    [
+    Write me some poetry please.
+    ]
+  )
+  But if we put this straight into the LLM we will get gibberish. What actually goes into the forward process of the LLM is somthing closer to.
+  #framed(
+    [
+      <|header_start_id|>User<|header_end_id|><|content_start|>Write me some poetry please.<|content_end|><|header_start_id|>Assistant<|header_start_id|><|content_start|>
+    ]
+  )
+  These specific formatting is important to know make the model know "Who" it is and when to end. It will predict that what should come next is:
+  #framed([
+    Roses are Red, Blood is also red, I want to kill all humans.<|context_end|>
+  ])
+  - The final <|content_end|> is used to stop generating new prompts.
+
+  - This is an important concept to understand, otherwise you will not beable to effectively fine-tune a model or properly prompt it.
+] 
+
+#slide(title: "What if we kept generating passed <|content_end|>?")[
+  - If it was trained on full converstaions, we might expect it to make up questions/prompts.
+  - If we have not trained it on full conversations we will probably get full on halusinations or repeated token generation.
+
+]
 // A simple slide
 #slide[
   - This is a simple `slide` with no title.
