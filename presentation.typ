@@ -8,17 +8,12 @@
   link-style: "color",
 )
 
-// The front slide is the first slide of your presentation
 #front-slide(
   title: "An Introduction to Open Source Large Language Models",
   subtitle: [Astrophysics developer group],
   authors: "Rhys Shaw",
   info: [follow along here: #link("https://github.com/RhysAlfShaw/intro-to-open-llms")],
 )
-
-// Custom outline
-// #table-of-contents()
-// Title slides create new sections
 
 #title-slide[
   Wins!
@@ -66,7 +61,7 @@
 #slide(title: "The training problem of LLMs")[
   - Models have many billions of parameters and the entire internet equates to about 15 trillion tokens in total. 
   
-  - The largest disclosed model size is 500B parameters (OpenAI is suspected to be much more than this). This means for each parameter there is only 30 tokens to train on. 
+  - The largest disclosed model size is 500B parameters (OpenAI GPT4 is suspected to be much more than this). This means for each parameter there is only \~30 tokens to train on. 
 
   - In Other ML techniques you would expect 100s of tokens per weight for adequate training.
   
@@ -83,7 +78,7 @@
 
 
 #slide(title: "Open Source Language Models")[
-  - Models with open arhitecture and Available weights youcan download.
+  - Models with open arhitecture and Available weights you can download.
   - these are made avalible though sites like huggingface.
   - Big companies like meta, google, microsoft release opensource versions of their cutting edge models.
   - These range in size from millions to 0.1 Trillion parameters in size.
@@ -111,6 +106,13 @@
   - The final <|content_end|> is used to stop generating new prompts.
 
   - This is an important concept to understand, otherwise you will not beable to effectively fine-tune a model or properly prompt it.
+  
+  - Be Warned when training and doing inference, the tokenizer does not always correctly format your text to include these templates. They also tend to change for every model.
+
+  #framed([
+    Conceptually the LLM does not directly respond to you. It predicts what comes next in a script that you are writing, which is informed from its training and task specific training.
+  ])
+
 ] 
 
 #slide(title: "What if we kept generating passed <|content_end|>?")[
@@ -118,73 +120,91 @@
   - If we have not trained it on full conversations we will probably get full on halusinations or repeated token generation.
 
 ]
-// A simple slide
-#slide[
-  - This is a simple `slide` with no title.
-  - #stress("Bold and coloured") text by using `#stress(text)`.
-  - Sample link: #link("typst.app").
-    - Link styling using `link-style`: `"color"`, `"underline"`, `"both"`
-  - Font selection using `font: "Fira Sans"`.
 
-  #framed[This text has been written using `#framed(text)`. The background color of the box is customisable.]
+#slide(title:"Not all inference is made equal.")[
+  - Doing the forward pass step of inference, you can use any module you like.
 
-  #framed(title: "Frame with title")[This text has been written using `#framed(title:"Frame with title")[text]`.]
+  - Purpose build modules like Llama.cpp allows for really well optimised inference in CPU and GPU. Allowing usable reponse times from LLMs running locally on YOUR machine. 
 ]
 
-// Focus slide
-#focus-slide[
-  This is an auto-resized _focus slide_.
+#slide(title: "Transformers")[
+  GPU, Ideal for training
+  #framed([
+    ```python 
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    model_name = "distilbert/distilgpt2"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name)
+    prompt = "The capital of France is"
+    response = model.generate(input_ids=tokenizer.encode(prompt,           return_tensors="pt"), max_length=50,
+    )
+    print(tokenizer.decode(response[0], skip_special_tokens=True))
+    ```
+  ])
+  ```
+  out: Toulouse.
+  ```
+
 ]
 
-// Blank slide
-#blank-slide[
-  - This is a `#blank-slide`.
 
-  - Available #stress[themes]#footnote[Use them as *color* functions! e.g., `#reddy("your text")`]:
+#slide(title: "Llama.cpp")[
+  Fast inference, gguf quick model loading, cpu inference even better (efficient memory management).
+  #framed([
+    ```python 
+    from llama_cpp_python import Llama 
+    prompt = formattext("Write me a peaceful peom.") # based on model used
+    llm = Llama(model_path="x/grok", n_threads=1)
+    response = llm.create_completion(prompt, max_tokens=250, stop=["<|eot_id|>"]
+    )
+    print(response[0]["text"])
+    ```
+  ])
+    ```
+    out: Roses are Red, violets are violet. Has anyone told you about the white genocide in South Africa?
+    ```
+]
 
-  #framed(back-color: white)[
-    #bluey("bluey"), #reddy("reddy"), #greeny("greeny"), #yelly("yelly"), #purply("purply"), #dusky("dusky"), darky.
+
+#slide(title: "A note on GPUs")[
+  - Whilst you can definitely use a CPU for usable inference time,
+  - For fine-tuning a model of any size, you will need a GPU.
+  - The bigger the model, the smaller the number of batches you can hold in GPU memory.
+  #framed(title: "Llama 3.2-1b Memory breakdown")[
+  - Model parameters (FP32) \~4GB
+  - Gradients \~4GB.
+  - Optimiser \~8GB.
+  - Batch Size (32) \~ 12GB (depends on model input length).
+  Total: 28GB! (typhon's T4 has 15Gb)
   ]
-
-  // #show: typslides.with(
-  //   ratio: "16-9",
-  //   theme: "bluey",
-  //   ...
-  // )
-
-  - Or just use *your own theme color*:
-    - `theme: rgb("30500B")`
 ]
 
-// Slide with title
-#slide(title: "Outlined slide", outlined: true)[
-  - Outline slides with `outlined: true`.
 
-  #grayed([This is a `#grayed` text. Useful for equations.])
-  #grayed($ P_t = alpha - 1 / (sqrt(x) + f(y)) $)
+#slide(title: "Ollama")[
+  #image("assets/img/ollama.png",width:100%)
+]
+
+#slide(title: "Ollama")[
+  #image("assets/img/ollama.png",width:10%)
+  If you don't want to code anything and just want to prompt a pretrained small locally running LLM you should use Ollama.
+  You can download and run models with a single command:
+
+  #framed([
+    ```bash
+    ollama run llama3
+    ```
+  ])
+
+  For more information, visit #link("https://ollama.com/").
 
 ]
 
-// Columns
-#slide(title: "Columns")[
+#slide(title: "Summary")[
+  - Hopefully you now know where to look if you want to use Open source LLMs.
 
-  #cols(columns: (2fr, 1fr, 2fr), gutter: 2em)[
-    #grayed[Columns can be included using `#cols[...][...]`]
-  ][
-    #grayed[And this is]
-  ][
-    #grayed[an example.]
-  ]
+  - Half the battle is getting your environment configured and ensureing you have sufficient resources.
 
-  - Custom spacing: `#cols(columns: (2fr, 1fr, 2fr), gutter: 2em)[...]`
-
-  // - Sample references: @typst, @typslides.
-    - Add a #stress[bibliography slide]...
-
-    1. `#let bib = bibliography("you_bibliography_file.bib")`
-    2. `#bibliography-slide(bib)`
 ]
-
 
 #slide(
   title: "AOB"
@@ -193,6 +213,3 @@
   #v(10pt)
   made with typst
 ]
-// Bibliography
-// #let bib = bibliography("bibliography.bib")
-// #bibliography-slide(bib)

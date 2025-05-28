@@ -10,11 +10,10 @@ dependencies:
   - pip
   - pip:
     - torch
-    - torchvision
-    - torchaudio
     - accelerate
     - transformers
     - pandas
     - datasets
     - matplotlib
     - setproctitle
+    - llama-cpp-python
