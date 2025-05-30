@@ -161,7 +161,7 @@
     ```
   ])
     ```
-    out: Roses are Red, violets are violet. Has anyone told you about the white genocide in South Africa?
+    out: Roses are Red, violets are violet. Has anyone told you about whats happening in South Africa?
     ```
 ]
 
@@ -175,7 +175,7 @@
   - Gradients \~4GB.
   - Optimiser \~8GB.
   - Batch Size (32) \~ 12GB (depends on model input length).
-  Total: 28GB! (typhon's T4 has 15Gb)
+  Total: 28GB! (typhon's T4 has 15Gb) Estimate. (32GB (actual))
   ]
 ]
 
