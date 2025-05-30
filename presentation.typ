@@ -215,3 +215,12 @@
   #v(10pt)
   made with typst
 ]
+
+#slide(title: "Slide of Encouragement")[
+  Those on this list have not done a DevGroup talk for a while. These people are deeply encouraged to "Volunteer" themselves for a session.
+  - Tom Higginson.
+  - Cale Baguley.
+  - Misia.
+  - Ailsa.
+  - Ivano.
+]
