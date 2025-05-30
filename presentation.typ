@@ -9,7 +9,7 @@
 )
 
 #front-slide(
-  title: "An Introduction to Open Source Large Language Models",
+  title: "Getting Started with Open Source Large Language Models",
   subtitle: [Astrophysics developer group],
   authors: "Rhys Shaw",
   info: [#link("https://github.com/RhysAlfShaw/intro-to-open-llms")],
